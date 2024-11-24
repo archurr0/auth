@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  <% if (locals.user) {%>
+    <% if (user.membership === "member"){ %>
+      <h1>WELCOME BACK MEMBER <%= user.username %></h1>
+    <% } else { %>
+      <h1>WELCOME BACK <%= user.username %></h1>
+    <% } %>
+    <a href="/secret-pass">Do you know the secret password?</a>
+    <a href="/log-out">LOG OUT</a>
+    <a href="/new-post">Make a New Post</a>
+    <div id="posts">
+      <% if (locals.posts) {%>
+        <ul>
+          <% posts.forEach(function(post) { %>
+            <li><h2><%= post.title %></h2>
+              <p><%= post.text %></p></li>
+            <% if (locals.user && (user.membership === "member")) { %>
+              <p>Created: <%= post.timestamp %></p>
+              <p>Author: <%= post.author %></p>
+            <%}%>
+            <% if (locals.user && user.admin === "on") { %>
+              <form method="POST" action="/delete/<%=post.id%>">
+                <button type="submit">Delete</button>
+              </form>
+            <%}%>
+          <%});%>
+        </ul>
+      <%} else {%>
+        <p>Error: Posts not received.</p>
+      <%}%>
+    </div>
+  <% } else { %>
+    <h1>please log in</h1>
+    <a href="/sign-up">SIGN UP</a>
+    <form action="/log-in" method="POST">
+      <label for="username">Username</label>
+      <input id="username" name="username" placeholder="username" type="text" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" />
+      <button>Log In</button>
+    </form>
+  <%}%>
+</body>
+</html>
